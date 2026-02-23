@@ -1,0 +1,46 @@
+.container-filter-map{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    max-height: 250px;
+    width: 200px;
+    background-color: white;
+    bottom: 20px;
+    left: 20px;
+    z-index: 999;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px rgb(139, 139, 139);
+}
+
+.container-filter-map p{
+    margin: 0;
+    margin-bottom: 5px;
+    font-weight: bolder;
+}
+
+.container-description-filter{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    gap: 5px;
+}
+
+.container-description-filter button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 3px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.container-description-filter span{
+    height: 18px;
+}

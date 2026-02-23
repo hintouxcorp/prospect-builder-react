@@ -1,0 +1,67 @@
+.lead-form {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  width: 320px;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+
+  z-index: 9999;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,.2);
+
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.lead-form label {
+  margin-top: 10px;
+  display: block;
+  font-size: 13px;
+}
+
+.lead-form input,
+.lead-form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.actions .save {
+  background: #2563eb;
+  color: white;
+}
+
+.actions button:not(.save) {
+  background: #e5e7eb;
+}
+
+.delete {
+  width: 100%;
+  margin-top: 10px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -1,0 +1,165 @@
+/* Página inteira */
+.contracts-page {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+}
+
+/* Cabeçalho */
+.contracts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Input de busca */
+.contracts-search-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 250px;
+}
+
+/* Container da tabela com scroll */
+.table-container {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+}
+
+/* Tabela */
+.clients-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Cabeçalho fixo */
+.clients-table thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+}
+
+.clients-table th,
+.clients-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+/* Botão */
+.create-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #2563eb;
+  color: white;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.create-btn:hover {
+  background-color: #1e40af;
+}
+
+.contracts-search-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.contracts-search-input {
+  padding: 8px 35px 8px 12px; /* espaço para o botão */
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 250px;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #888;
+  transition: 0.2s ease;
+}
+
+.clear-search-btn:hover {
+  color: #000;
+}
+
+.contract-panel {
+  margin-top: 20px;
+  padding: 20px;
+  background: #eeecec;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 70vh;          /* ALTURA FIXA DO PAINEL */
+}
+
+.products-contract-list {
+  flex: 1;               /* ocupa espaço restante */
+  overflow-y: auto;      /* scroll interno */
+  overflow-x: hidden;
+  min-height: 0;       /* ESSENCIAL para flex funcionar */
+  padding-right: 8px;
+}
+
+.product-contract-card{
+  display: flex;
+  height: 60px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  flex-direction: row;
+  position: relative;
+  background-color: white;
+  box-shadow: 1px 1px 5px rgb(219, 219, 219);
+  transition: 0.15s ease-in-out box-shadow;
+}
+
+.product-contract-card:hover{
+  box-shadow: 1px 1px 5px rgb(175, 175, 175);
+}
+
+.product-add-button{
+  position: absolute;
+  right: 0px;
+  height: 100%;
+}
+
+.product-add-button button{
+  height: 60px;
+  width: 60px;
+  font-size: 18px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #439feb;
+  color: white;
+  box-shadow: 0px 1px 5px rgb(182, 182, 182);
+  transition: 0.2s ease-in-out background-color;
+}
+
+.product-add-button button:hover{
+  cursor: pointer;
+  background-color: #378bcf;
+}
+
+.selected-contract-items{
+  border-top: 1px solid gray;
+}

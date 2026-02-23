@@ -1,0 +1,18 @@
+.sale-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.sale-form input,
+.sale-form select {
+  padding: 8px;
+}
+
+.sale-form button {
+  background: black;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+}

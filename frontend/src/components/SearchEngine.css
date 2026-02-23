@@ -1,0 +1,62 @@
+.search-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  z-index: 999;
+
+  display: flex;
+  align-items: center;
+
+  background: white;
+  border-radius: 30px;
+  overflow: hidden;
+
+  width: 44px;
+  height: 44px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+
+  transition: width .35s ease;
+}
+
+/* ABERTO */
+
+.search-wrapper.open {
+  width: 280px;
+}
+
+/* BOTÃO */
+
+.search-btn {
+  width: 44px;
+  height: 44px;
+  padding-left: 10px;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* INPUT */
+
+.search-input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  padding-right: 15px;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity .2s ease;
+}
+
+.search-wrapper.open .search-input {
+  opacity: 1;
+  pointer-events: all;
+}
