@@ -16,30 +16,47 @@ export default function MapFilter({ onFilter }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 BLOQUEIA propagação de clique pro mapa (nível Leaflet)
+  // 🔥 BLOQUEIA clique indo pro mapa
   useEffect(() => {
     if (containerRef.current) {
       L.DomEvent.disableClickPropagation(containerRef.current);
+      L.DomEvent.disableScrollPropagation(containerRef.current); // extra
     }
   }, []);
 
-  // 🔄 BUSCAR TIPOS DO BACKEND
+  // 🔄 BUSCAR TIPOS
   useEffect(() => {
-    fetch('http://localhost:8000/api/business-types/')
-      .then(res => res.json())
-      .then(data => setTypes(data));
+    async function fetchTypes() {
+      try {
+        const res = await fetch('http://localhost:8000/api/business-types/');
+        const data = await res.json();
+        setTypes(data);
+      } catch (err) {
+        console.error('Erro ao buscar tipos:', err);
+      }
+    }
+
+    fetchTypes();
   }, []);
 
-  // 🎯 APLICAR FILTRO
+  // 🎯 FILTRAR
   function handleFilter(e: React.MouseEvent, type: string) {
-    e.stopPropagation(); // 🔥 extra segurança
+    e.stopPropagation();
+
+    // 🔥 se clicar no mesmo filtro → remove
+    if (selected === type) {
+      setSelected(null);
+      onFilter(null);
+      return;
+    }
+
     setSelected(type);
     onFilter(type);
   }
 
-  // ❌ LIMPAR FILTRO
+  // ❌ LIMPAR
   function clearFilter(e: React.MouseEvent) {
-    e.stopPropagation(); // 🔥 extra segurança
+    e.stopPropagation();
     setSelected(null);
     onFilter(null);
   }
@@ -48,11 +65,11 @@ export default function MapFilter({ onFilter }: Props) {
     <div
       ref={containerRef}
       className='container-filter-map'
-      onClick={(e) => e.stopPropagation()} // 🔥 fallback
+      onClick={(e) => e.stopPropagation()}
     >
       <p>Filtros</p>
 
-      <button onClick={(e) => clearFilter(e)}>
+      <button onClick={clearFilter}>
         ❌ Limpar filtro
       </button>
 

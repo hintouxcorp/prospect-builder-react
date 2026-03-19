@@ -99,9 +99,18 @@ function getIcon(status: Status) {
 
 /* ================= MAP CLICK ================= */
 
-function MapClick({ onAdd }: { onAdd: (p: LatLng) => void }) {
+function MapClick({
+  onAdd,
+  disabled
+}: {
+  onAdd: (p: LatLng) => void;
+  disabled?: boolean;
+}) {
   useMapEvents({
-    click: e => onAdd(e.latlng)
+    click: e => {
+      if (disabled) return; // 🔥 impede criação quando necessário
+      onAdd(e.latlng);
+    }
   });
 
   return null;
@@ -137,11 +146,19 @@ export default function Map() {
   const [selected, setSelected] = useState<House | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(true);
 
-  /* LOAD */
+  /* ================= FETCH HOUSES (COM FILTRO) ================= */
 
-  const fetchHouses = useCallback(async () => {
-    const res = await fetch(API, { credentials: "include" });
-    setHouses(await res.json());
+  const fetchHouses = useCallback(async (filter?: string | null) => {
+    let url = API;
+
+    if (filter) {
+      url += `?business_type=${filter}`;
+    }
+
+    const res = await fetch(url, { credentials: "include" });
+    const data = await res.json();
+
+    setHouses(data);
   }, []);
 
   const fetchCrimes = useCallback(async () => {
@@ -150,11 +167,11 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-    fetchHouses();
+    fetchHouses(null); // 🔥 carrega sem filtro
     fetchCrimes();
-  }, []);
+  }, [fetchHouses, fetchCrimes]);
 
-  /* CREATE */
+  /* ================= CREATE ================= */
 
   function createHouse(pos: LatLng) {
     setSelected({
@@ -167,7 +184,7 @@ export default function Map() {
     });
   }
 
-  /* SAVE */
+  /* ================= SAVE ================= */
 
   async function saveHouse() {
     if (!selected) return;
@@ -183,10 +200,10 @@ export default function Map() {
     });
 
     setSelected(null);
-    fetchHouses();
+    fetchHouses(); // 🔥 mantém filtro? pode evoluir depois
   }
 
-  /* DELETE */
+  /* ================= DELETE ================= */
 
   async function deleteHouse() {
     if (!selected?.id) return;
@@ -200,15 +217,13 @@ export default function Map() {
     fetchHouses();
   }
 
-  /* HEAT POINTS */
+  /* ================= HEAT ================= */
 
   const heatPoints = crimes.map(c => [c.latitude, c.longitude, 1]);
 
   return (
     <>
-      <SearchEngine
-        onSearch={value => console.log("Pesquisar:", value)}
-      />
+      <SearchEngine onSearch={value => console.log("Pesquisar:", value)} />
 
       <button
         className="heat-toggle"
@@ -224,9 +239,12 @@ export default function Map() {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        <MapClick onAdd={createHouse} />
+        {/* 🔥 BLOQUEIO OPCIONAL QUANDO FORM ABERTO */}
+        <MapClick onAdd={createHouse} disabled={!!selected} />
 
-        <MapFilter />
+        {/* 🔥 AQUI ESTÁ A CONEXÃO */}
+        <MapFilter onFilter={fetchHouses} />
+
         {showHeatmap && <HeatLayer points={heatPoints} />}
 
         {houses.map(h => (
