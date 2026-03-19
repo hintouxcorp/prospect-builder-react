@@ -16,11 +16,11 @@ export default function MapFilter({ onFilter }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 BLOQUEIA clique indo pro mapa
+  // 🔥 BLOQUEIA interação com o mapa
   useEffect(() => {
     if (containerRef.current) {
       L.DomEvent.disableClickPropagation(containerRef.current);
-      L.DomEvent.disableScrollPropagation(containerRef.current); // extra
+      L.DomEvent.disableScrollPropagation(containerRef.current);
     }
   }, []);
 
@@ -43,7 +43,6 @@ export default function MapFilter({ onFilter }: Props) {
   function handleFilter(e: React.MouseEvent, type: string) {
     e.stopPropagation();
 
-    // 🔥 se clicar no mesmo filtro → remove
     if (selected === type) {
       setSelected(null);
       onFilter(null);
@@ -67,20 +66,30 @@ export default function MapFilter({ onFilter }: Props) {
       className='container-filter-map'
       onClick={(e) => e.stopPropagation()}
     >
+      {/* HEADER */}
       <p>Filtros</p>
 
       <button onClick={clearFilter}>
         ❌ Limpar filtro
       </button>
 
-      {types.map((item) => (
-        <div key={item.value} className='container-description-filter'>
-          <button onClick={(e) => handleFilter(e, item.value)}>
-            {selected === item.value ? '✅' : '⬜'}
-          </button>
-          <span>{item.label}</span>
-        </div>
-      ))}
+      {/* LISTA COM SCROLL */}
+      <div className="filter-list">
+        {types.map((item) => (
+          <div
+            key={item.value}
+            className={`container-description-filter ${
+              selected === item.value ? 'active' : ''
+            }`}
+          >
+            <button onClick={(e) => handleFilter(e, item.value)}>
+              {selected === item.value ? '✅' : '⬜'}
+            </button>
+
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
