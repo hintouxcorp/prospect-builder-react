@@ -12,31 +12,87 @@
     left: 20px;
     z-index: 999;
 
-    padding: 12px;
+    padding: 10px;
     border-radius: 10px;
 
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 
     font-family: sans-serif;
+
+    /* 🔥 ANIMAÇÃO */
+    transition: all 0.25s ease;
+    overflow: hidden;
+}
+
+/* 🔥 ESTADO MINIMIZADO */
+
+.container-filter-map.collapsed {
+    max-height: 45px;
+    width: 160px;
+    padding: 8px;
 }
 
 /* HEADER */
 
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .container-filter-map p {
     margin: 0;
-    margin-bottom: 8px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     color: #333;
+}
+
+/* BOTÃO TOGGLE */
+
+.filter-header button {
+    width: 22px;
+    height: 22px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #f0f0f0;
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: all 0.2s ease;
+}
+
+.filter-header button:hover {
+    background: #e0e0e0;
+}
+
+/* CONTEÚDO */
+
+.filter-content {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+
+    /* 🔥 animação */
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.container-filter-map.collapsed .filter-content {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* BOTÃO LIMPAR */
 
 .container-filter-map > button {
-    margin-bottom: 8px;
-    padding: 6px 8px;
+    margin-bottom: 6px;
+    padding: 5px 6px;
 
-    font-size: 12px;
+    font-size: 11px;
     border: none;
     border-radius: 6px;
 
@@ -50,29 +106,35 @@
     background: #eaeaea;
 }
 
-/* LISTA COM SCROLL */
+/* LISTA */
 
 .filter-list {
     overflow-y: auto;
-    max-height: 180px;
-    padding-right: 4px;
+    max-height: 160px;
+    padding-right: 3px;
 }
 
-/* ITEM */
+/* ITEM (🔽 MAIS COMPACTO) */
 
 .container-description-filter {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 
-    padding: 6px 6px;
-    border-radius: 6px;
+    padding: 4px 4px;
+    border-radius: 5px;
 
     transition: background 0.2s ease;
 }
 
 .container-description-filter:hover {
     background: #f7f7f7;
+}
+
+/* ATIVO */
+
+.container-description-filter.active {
+    background: #e8f0ff;
 }
 
 /* BOTÃO */
@@ -82,27 +144,27 @@
     justify-content: center;
     align-items: center;
 
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
 
     border: none;
     background: transparent;
 
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 /* TEXTO */
 
 .container-description-filter span {
-    font-size: 13px;
+    font-size: 12px;
     color: #444;
 }
 
-/* SCROLL BONITO */
+/* SCROLL */
 
 .filter-list::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 .filter-list::-webkit-scrollbar-thumb {
