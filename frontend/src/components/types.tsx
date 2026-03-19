@@ -1,3 +1,4 @@
+// ================= STATUS =================
 export type Status =
   | "none"
   | "lead"
@@ -5,16 +6,11 @@ export type Status =
   | "not_interested"
   | "client";
 
+// ================= LEAD =================
 export type LeadType = "base" | "client";
 
-export type BusinessType =
-  | "none"
-  | "barbearia"
-  | "salao"
-  | "manicure"
-  | "pedicure"
-  | "estetica"
-  | "outro";
+// 🔥 Agora alinhado com backend (ID + fallback "outro")
+export type BusinessType = number | "outro" | null;
 
 export type House = {
   id?: number;
@@ -30,10 +26,12 @@ export type House = {
   type: LeadType;
   radius?: number;
 
+  // 🔥 FK ou fallback
   business_type?: BusinessType;
   custom_business?: string;
 };
 
+// ================= SALES =================
 export type SaleKind = "product" | "service";
 export type SaleStatus = "active" | "cancelled";
 
@@ -47,6 +45,7 @@ export type Sale = {
   status?: SaleStatus;
 };
 
+// ================= PRODUCTS =================
 export type ProductType = "product" | "service";
 
 export type Product = {

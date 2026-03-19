@@ -3,8 +3,8 @@ import L from 'leaflet';
 import './MapFilter.css';
 
 type BusinessType = {
-  value: string;
-  label: string;
+  id: number;
+  name: string;
 };
 
 type Props = {
@@ -76,27 +76,30 @@ export default function MapFilter({ onFilter }: Props) {
         </button>
       </div>
 
-      {/* 🔥 CONTEÚDO SEM REMOVER DO DOM */}
       <div className="filter-content">
         <button onClick={clearFilter}>
           ❌ Limpar filtro
         </button>
 
         <div className="filter-list">
-          {types.map((item) => (
-            <div
-              key={item.value}
-              className={`container-description-filter ${
-                selected === item.value ? 'active' : ''
-              }`}
-            >
-              <button onClick={(e) => handleFilter(e, item.value)}>
-                {selected === item.value ? '✅' : '⬜'}
-              </button>
+          {types.map((item) => {
+            const value = String(item.id);
 
-              <span>{item.label}</span>
-            </div>
-          ))}
+            return (
+              <div
+                key={item.id}
+                className={`container-description-filter ${
+                  selected === value ? 'active' : ''
+                }`}
+              >
+                <button onClick={(e) => handleFilter(e, value)}>
+                  {selected === value ? '✅' : '⬜'}
+                </button>
+
+                <span>{item.name}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

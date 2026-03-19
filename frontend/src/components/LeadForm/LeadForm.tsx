@@ -1,5 +1,11 @@
+import { useEffect, useState } from "react";
 import "./LeadForm.css";
-import type { House, Status, LeadType, BusinessType } from "../types";
+import type { House, Status, LeadType } from "../types";
+
+type BusinessTypeApi = {
+  id: number;
+  name: string;
+};
 
 type Props = {
   data: House;
@@ -16,13 +22,30 @@ export default function LeadForm({
   onCancel,
   onDelete
 }: Props) {
+
+  const [businessTypes, setBusinessTypes] = useState<BusinessTypeApi[]>([]);
+
+  // 🔥 Buscar tipos da API
+  useEffect(() => {
+    async function fetchTypes() {
+      try {
+        const res = await fetch("http://localhost:8000/api/business-types/");
+        const data = await res.json();
+        setBusinessTypes(data);
+      } catch (err) {
+        console.error("Erro ao buscar tipos:", err);
+      }
+    }
+
+    fetchTypes();
+  }, []);
+
   return (
     <div className="lead-form">
 
       <h3>{data.id ? "Editar Lead" : "Novo Lead"}</h3>
 
       {/* NOME */}
-
       <label>Nome</label>
       <input
         value={data.name}
@@ -30,7 +53,6 @@ export default function LeadForm({
       />
 
       {/* TIPO */}
-
       <label>Tipo</label>
       <select
         value={data.type}
@@ -40,7 +62,7 @@ export default function LeadForm({
           onChange({
             ...data,
             type: newType,
-            business_type: newType === "base" ? "none" : data.business_type,
+            business_type: newType === "base" ? null : data.business_type,
             custom_business: newType === "base" ? "" : data.custom_business
           });
         }}
@@ -50,31 +72,34 @@ export default function LeadForm({
       </select>
 
       {/* ================= CLIENTE ================= */}
-
       {data.type === "client" && (
         <>
-
           {/* TIPO DE NEGÓCIO */}
-
           <label>Tipo de negócio</label>
 
           <select
-            value={data.business_type}
-            onChange={e =>
+            value={data.business_type ?? ""}
+            onChange={e => {
+              const value = e.target.value;
+
               onChange({
                 ...data,
-                business_type: e.target.value as BusinessType
-              })
-            }
+                business_type: value === "outro" ? "outro" : Number(value)
+              });
+            }}
           >
-            <option value="barbearia">Barbearia</option>
-            <option value="salao">Salão</option>
-            <option value="manicure">Manicure</option>
-            <option value="pedicure">Pedicure</option>
-            <option value="estetica">Estética</option>
+            <option value="">Selecione</option>
+
+            {businessTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
+            ))}
+
             <option value="outro">Outro</option>
           </select>
 
+          {/* CAMPO CUSTOM */}
           {data.business_type === "outro" && (
             <>
               <label>Especifique</label>
@@ -90,7 +115,6 @@ export default function LeadForm({
           )}
 
           {/* CONTATO */}
-
           <input
             placeholder="Email"
             value={data.email || ""}
@@ -110,7 +134,6 @@ export default function LeadForm({
           />
 
           {/* STATUS */}
-
           <select
             value={data.status}
             onChange={e =>
@@ -127,7 +150,6 @@ export default function LeadForm({
       )}
 
       {/* ================= BASE ================= */}
-
       {data.type === "base" && (
         <>
           <label>Raio (metros)</label>
@@ -148,7 +170,6 @@ export default function LeadForm({
       )}
 
       {/* AÇÕES */}
-
       <div className="actions">
         <button className="save" onClick={onSave}>Salvar</button>
         <button onClick={onCancel}>Cancelar</button>

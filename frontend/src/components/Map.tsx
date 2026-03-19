@@ -45,12 +45,18 @@ export type House = {
   name: string;
   latitude: number;
   longitude: number;
+
   email?: string;
   phone?: string;
   whatsapp?: string;
+
   status: Status;
   type: LeadType;
   radius?: number;
+
+  // 🔥 NOVO
+  business_type?: number | "outro" | null;
+  custom_business?: string;
 };
 
 type Crime = {
@@ -108,7 +114,7 @@ function MapClick({
 }) {
   useMapEvents({
     click: e => {
-      if (disabled) return; // 🔥 impede criação quando necessário
+      if (disabled) return;
       onAdd(e.latlng);
     }
   });
@@ -146,7 +152,7 @@ export default function Map() {
   const [selected, setSelected] = useState<House | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(true);
 
-  /* ================= FETCH HOUSES (COM FILTRO) ================= */
+  /* ================= FETCH ================= */
 
   const fetchHouses = useCallback(async (filter?: string | null) => {
     let url = API;
@@ -167,7 +173,7 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-    fetchHouses(null); // 🔥 carrega sem filtro
+    fetchHouses(null);
     fetchCrimes();
   }, [fetchHouses, fetchCrimes]);
 
@@ -180,11 +186,12 @@ export default function Map() {
       longitude: pos.lng,
       status: "none",
       type: "base",
-      radius: DEFAULT_RADIUS
+      radius: DEFAULT_RADIUS,
+      business_type: null
     });
   }
 
-  /* ================= SAVE ================= */
+  /* ================= SAVE (🔥 CORRIGIDO) ================= */
 
   async function saveHouse() {
     if (!selected) return;
@@ -192,15 +199,34 @@ export default function Map() {
     const method = selected.id ? "PUT" : "POST";
     const url = selected.id ? `${API}${selected.id}/` : API;
 
-    await fetch(url, {
-      method,
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(selected)
-    });
+    const payload = {
+      ...selected,
+      business_type:
+        selected.business_type === "outro"
+          ? null
+          : selected.business_type
+    };
 
-    setSelected(null);
-    fetchHouses(); // 🔥 mantém filtro? pode evoluir depois
+    try {
+      const res = await fetch(url, {
+        method,
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error("ERRO BACKEND:", error);
+        return;
+      }
+
+      setSelected(null);
+      fetchHouses();
+
+    } catch (err) {
+      console.error("ERRO:", err);
+    }
   }
 
   /* ================= DELETE ================= */
@@ -239,10 +265,8 @@ export default function Map() {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        {/* 🔥 BLOQUEIO OPCIONAL QUANDO FORM ABERTO */}
         <MapClick onAdd={createHouse} disabled={!!selected} />
 
-        {/* 🔥 AQUI ESTÁ A CONEXÃO */}
         <MapFilter onFilter={fetchHouses} />
 
         {showHeatmap && <HeatLayer points={heatPoints} />}
