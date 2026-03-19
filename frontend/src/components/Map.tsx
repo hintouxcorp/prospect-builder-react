@@ -54,7 +54,6 @@ export type House = {
   type: LeadType;
   radius?: number;
 
-  // 🔥 NOVO
   business_type?: number | "outro" | null;
   custom_business?: string;
 };
@@ -152,6 +151,9 @@ export default function Map() {
   const [selected, setSelected] = useState<House | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(true);
 
+  // 🔥 NOVO: controla atualização do filtro
+  const [refreshTypes, setRefreshTypes] = useState(0);
+
   /* ================= FETCH ================= */
 
   const fetchHouses = useCallback(async (filter?: string | null) => {
@@ -191,7 +193,7 @@ export default function Map() {
     });
   }
 
-  /* ================= SAVE (🔥 CORRIGIDO) ================= */
+  /* ================= SAVE ================= */
 
   async function saveHouse() {
     if (!selected) return;
@@ -222,7 +224,12 @@ export default function Map() {
       }
 
       setSelected(null);
+
+      // 🔥 atualiza lista de casas
       fetchHouses();
+
+      // 🔥 força atualização do filtro
+      setRefreshTypes(prev => prev + 1);
 
     } catch (err) {
       console.error("ERRO:", err);
@@ -267,7 +274,8 @@ export default function Map() {
 
         <MapClick onAdd={createHouse} disabled={!!selected} />
 
-        <MapFilter onFilter={fetchHouses} />
+        {/* 🔥 key força reload do filtro */}
+        <MapFilter key={refreshTypes} onFilter={fetchHouses} />
 
         {showHeatmap && <HeatLayer points={heatPoints} />}
 
